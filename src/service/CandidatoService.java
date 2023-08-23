@@ -3,9 +3,10 @@ package service;
 import enums.AcaoAposAnaliseCandidato;
 import model.Candidato;
 
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class ProcessoSeletivoService {
+public class CandidatoService {
     public static final double SALARIO_BASE = 2_000.0;
 
     public static AcaoAposAnaliseCandidato analisarCandidato(Candidato candidato) {
@@ -25,9 +26,18 @@ public class ProcessoSeletivoService {
         return ThreadLocalRandom.current().nextInt(1, 5);
     }
 
-    public static void contatoComSucesso(Candidato candidato) {
+    public static void realizarContato(Candidato candidato) {
         if (tentativasDeContato() <= 3) {
             candidato.setContatoComSucesso();
         }
+    }
+    public static boolean realizarContraProposta(Candidato candidato) {
+        Random random = new Random();
+        boolean aceitou = random.nextBoolean();
+
+        if (aceitou) {
+            candidato.setSalarioPretendido(SALARIO_BASE);
+        }
+        return aceitou;
     }
 }

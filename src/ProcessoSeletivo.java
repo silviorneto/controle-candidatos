@@ -1,6 +1,6 @@
 import enums.AcaoAposAnaliseCandidato;
 import model.Candidato;
-import service.ProcessoSeletivoService;
+import service.CandidatoService;
 
 import java.util.ArrayList;
 
@@ -36,17 +36,17 @@ public class ProcessoSeletivo {
             Candidato candidato = new Candidato(nomeCandidato);
             candidatosInscritos.add(candidato);
 
-            AcaoAposAnaliseCandidato acao = ProcessoSeletivoService.analisarCandidato(candidato);
+            AcaoAposAnaliseCandidato acao = CandidatoService.analisarCandidato(candidato);
 
             if (acao == AcaoAposAnaliseCandidato.LIGAR) {
-                ProcessoSeletivoService.contatoComSucesso(candidato);
+                CandidatoService.realizarContato(candidato);
 
                 if (candidato.isContatoComSucesso()) {
                     candidatosAprovados.add(candidato);
                 }
             } else if (acao == AcaoAposAnaliseCandidato.LIGAR_COM_CONTRAPROPOSTA) {
                 if (candidato.isContatoComSucesso()) {
-                    if (candidato.aceitouContraProposta()) {
+                    if (CandidatoService.realizarContraProposta(candidato)) {
                         candidatosAprovados.add(candidato);
                     }
                 }
@@ -61,16 +61,16 @@ public class ProcessoSeletivo {
             if (candidatosAprovados.size() > 4) {
                 break;
             }
-            AcaoAposAnaliseCandidato acao = ProcessoSeletivoService.analisarCandidato(candidato);
+            AcaoAposAnaliseCandidato acao = CandidatoService.analisarCandidato(candidato);
 
             if (acao == AcaoAposAnaliseCandidato.LIGAR) {
-                ProcessoSeletivoService.contatoComSucesso(candidato);
+                CandidatoService.realizarContato(candidato);
                 if (candidato.isContatoComSucesso()) {
                     candidatosAprovados.add(candidato);
                 }
             } else if (acao == AcaoAposAnaliseCandidato.LIGAR_COM_CONTRAPROPOSTA || acao == AcaoAposAnaliseCandidato.AGUARDAR) {
                 if (candidato.isContatoComSucesso()) {
-                    if (candidato.aceitouContraProposta()) {
+                    if (CandidatoService.realizarContraProposta(candidato)) {
                         candidatosAprovados.add(candidato);
                     }
                 }
@@ -85,7 +85,7 @@ public class ProcessoSeletivo {
         ArrayList<Candidato> listaFiltrada = new ArrayList<>();
 
         for (Candidato candidato: candidatosInscritos)
-            if (candidatosAprovados.stream().filter(c -> c.getNome() == candidato.getNome()).toArray().length < 1) {
+            if (candidatosAprovados.stream().filter(c -> c.getNome().toLowerCase() == candidato.getNome().toLowerCase()).toArray().length < 1) {
                 listaFiltrada.add(candidato);
             }
 

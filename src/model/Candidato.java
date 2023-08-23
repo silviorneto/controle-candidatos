@@ -1,6 +1,6 @@
 package model;
 
-import service.ProcessoSeletivoService;
+import service.CandidatoService;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -22,6 +22,10 @@ public class Candidato {
         return salarioPretendido;
     }
 
+    public void setSalarioPretendido(double salarioPretendido) {
+        this.salarioPretendido = salarioPretendido;
+    }
+
     public boolean isContatoComSucesso() {
         return contatoComSucesso;
     }
@@ -32,16 +36,6 @@ public class Candidato {
 
     private double calculaSalarioPretendido() {
         return ThreadLocalRandom.current().nextDouble(1800, 2200);
-    }
-
-    public boolean aceitouContraProposta() {
-        Random random = new Random();
-        boolean aceitou = random.nextBoolean();
-
-        if (aceitou) {
-            this.salarioPretendido = ProcessoSeletivoService.SALARIO_BASE;
-        }
-        return aceitou;
     }
 
     @Override
